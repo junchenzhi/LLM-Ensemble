@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LLM Ensemble: A Survey</title>
+    <link rel="icon" href="./biglogo.png" type="image/png"> <!-- Favicon -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            width: 360px; /* Three times the original size */
+        }
+
+        header h1 {
+            color: #333;
+            font-size: 36px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        header .authors {
+            margin-top: 15px;
+        }
+
+        header .authors a {
+            color: #007bff;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .content {
+            margin: 20px auto;
+            max-width: 900px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .section-content {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        footer {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            max-width: 80%; /* Resize image to fit the page */
+            height: auto;
+            margin-top: 20px;
+        }
+
+        .figure-caption {
+            font-size: 14px;
+            text-align: center;
+            color: #777;
+            margin-top: 40px; /* Added space below the image */
+            margin-bottom: 40px; /* Additional space before footer */
+        }
+
+        .links {
+            margin-top: 15px;
+        }
+        .links a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <img src="./logo.png" alt="LLM Ensemble Logo">
+    <h1>Harnessing Multiple Large Language Models: A Survey on LLM Ensemble</h1>
+    <div class="authors">
+        <p>Zhijun Chen, Jingzheng Li, Pengpeng Chen, Zhuoran Li, Kai Sun, Yuankai Luo, Qianren Mao, Dingqi Yang, Hailong Sun, Philip S. Yu</p>
+    </div>
+    <div class="links">
+        <p><a href="https://arxiv.org/abs/2502.18036">ArXiv</a>  <a href="https://github.com/junchenzhi/Awesome-LLM-Ensemble">GitHub</a></p>
+    </div>
+</header>
+
+<div class="content">
+    <h2 class="section-title">Abstract</h2>
+    <p class="section-content">
+        LLM Ensemble—which involves the comprehensive use of multiple large language models (LLMs), each aimed at handling user queries during downstream inference, to benefit from their individual strengths—has gained substantial attention recently. The widespread availability of LLMs, coupled with their varying strengths and out-of-the-box usability, has profoundly advanced the field of LLM Ensemble. This paper presents the first systematic review of recent developments in LLM Ensemble. First, we introduce our taxonomy of LLM Ensemble and discuss several related research problems. Then, we provide a more in-depth classification of the methods under the broad categories of “ensemble-before-inference, ensemble-during-inference, ensemble-after-inference,” and review all relevant methods. Finally, we introduce related benchmarks and applications, summarize existing studies, and suggest several future research directions.
+    </p>
+</div>
+
+<div class="content">
+    <h2 class="section-title">Introduction</h2>
+    <p class="section-content">
+        In recent years, the landscape of artificial intelligence has been dramatically reshaped by the development of Large Language Models (LLMs), including Gemini, GPT-4, Llama, and the recently introduced DeepSeek. The success of these LLMs continues to fuel widespread research enthusiasm, with a remarkable total of over 182,000 large language models now accessible in the Hugging Face library.
+    </p>
+    <p class="section-content">
+        Behind this research enthusiasm, however, we can identify two main aspects: 1) The performance concerns: The direct out-of-the-box capability of LLMs (from zero-shot inference) and their indirect out-of-the-box capability (from in-context-learning few-shot inference) still raise performance worries, including accuracy, hallucinations, and misalignment with human intent, among others; 2) The varying strengths and weaknesses of LLMs, each with different inference costs: Due to differences in architecture, parameter size, tokenization, dictionary, training data, and methodology, these LLMs exhibit substantial variability and their responses can differ significantly. With the above two aspects in mind and drawing on the spirit of Ensemble Learning, it is natural to consider that, for each task query, rather than persistently relying on a single LLM based on public rankings or other criteria, it might be more advantageous to simultaneously consider multiple LLM candidates (usable out-of-the-box) and harness their distinct strengths. This is exactly what the recently emerging field of LLM Ensemble explores.
+    </p>
+    <p class="section-content">
+    Existing LLM Ensemble methods can be broadly categorized into three types, depending on the sequence of LLM inference and ensemble: 1) Ensemble-before-inference approach, utilizes the given query information while considering the diverse characteristics of all LLM candidates to route an appropriate model for inference (this approach is similar to the hard voting strategy in Ensemble Learning); 2) Ensemble-during-inference approach, aggregates incomplete responses (e.g., token-level information) from multiple LLMs during the decoding process and feeds the combined result back into all the models; 3) Ensemble-after-inference approach, performs the ensemble after full responses (instead of fragments) have been generated by all models or a subset of them. Despite the emergence of numerous methods derived from these broad paradigms recently, there is still no formal survey that offers a comprehensive review of the core ideas and related research in the rapidly evolving field of LLM Ensemble. We present the first comprehensive survey on LLM Ensemble, introducing recent advances and focusing on taxonomy, related problems, methods, benchmarks, applications, and future directions. We hope that this survey will provide a thorough review for researchers and inspire further exploration.
+    </p>
+</div>
+
+<div class="content">
+    <h2 class="section-title">LLM Ensemble Taxonomy</h2>
+
+    <div class="image-container">
+        <img src="./figure1.png" alt="LLM Ensemble Taxonomy">
+    </div>
+
+    <div class="figure-caption">
+        Figure 1: Illustration of the LLM Ensemble taxonomy. (Note that for (b) ensemble-during-inference, there is also a (b3) process-level ensemble approach not depicted in the figure, due to layout considerations and the status that this approach is instantiated by a single method.)
+    </div>
+    
+
+    <h3>(a) Ensemble Before Inference</h3>
+    <p class="section-content">
+        This approach employs a routing algorithm prior to LLM inference to allocate a specific query to the most suitable model, allowing the selected model that is specialized for the query and typically more cost-efficient inference to perform the task. As illustrated in Figure 1, existing methods can be classified into two categories, depending on whether the router necessitates the use of pre-customized data for pre-training:
+        <br> <strong>(a1) pretrained router</strong>;
+        <br> <strong>(a2) non-pretrained router</strong>.
+    </p>
+
+    <h3>(b) Ensemble During Inference</h3>
+    <p class="section-content">
+        As the most granular form of ensemble among the three broad categories, this type of approach encompasses:
+        <br> <strong>(b1) token-level ensemble</strong> methods, integrate the token-level outputs of multiple models at the finest granularity of decoding;
+        <br> <strong>(b2) span-level ensemble</strong> methods, perform ensemble at the level of a sequence fragment (e.g., a span of four words);
+        <br> <strong>(b3) process-level ensemble</strong> methods, select the optimal reasoning process step-bystep within the reasoning chain for a given complex reasoning task. Note that for these ensemble-during-inference methods, the aggregated text segments will be concatenated with the preceding text and fed back into the models.
+    </p>
+
+    <h3>(c) Ensemble After Inference</h3>
+    <p class="section-content">
+        These methods can be classified into two categories:
+        <br> <strong>(c1) Non-cascade</strong> methods, which perform ensemble by integrating multiple complete responses contributed from all LLM candidates;
+        <br> <strong> (c2) Cascade</strong> methods, which consider both performance and inference costs, progressively performing inference through a chain of LLM candidates ranked primarily by model size to identify the most suitable response and terminate the cascade process.
+    </p>
+</div>
+
+</body>
+</html>
