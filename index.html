@@ -175,8 +175,8 @@
     <h3>(a) Ensemble Before Inference</h3>
     <p class="section-content">
         This approach employs a routing algorithm prior to LLM inference to allocate a specific query to the most suitable model, allowing the selected model that is specialized for the query and typically more cost-efficient inference to perform the task. As illustrated in Figure 1, existing methods can be classified into two categories, depending on whether the router utility is discretized: 
-        <br> <strong>(a1) discrete utility </strong> methods discretize the model utility into categorical labels. Depending on whether the categories are defined independently or via pairwise comparisons, these methods can be further divided into classification-based and comparison-based methods;
-        <br> <strong>(a2) continuous utility</strong> methods model LLM utility as real-valued variables, such as response length or performance scores. This formulation enables a fine-grained characterization of model behavior, capturing subtle performance differences obscured by categorical definitions. Moreover, continuous utilities naturally aggregate multiple objectives (e.g., latency and cost) into a unified scalar, allowing the router to jointly optimize these objectives and learn more flexible policies.
+        <br> <strong>(a1) discrete utility </strong> methods discretize the model utility into categorical labels;
+        <br> <strong>(a2) continuous utility</strong> methods model LLM utility as real-valued variables, such as response length or performance scores. This formulation enables a fine-grained characterization of model behavior, capturing subtle performance differences obscured by categorical definitions. 
     </p>
 
     <h3>(b) Ensemble During Inference</h3>
